@@ -26,28 +26,7 @@ function enviarFormularioCadastro(event) {
         }),
         body: JSON.stringify({
            
-                    nomeCompleto: document.getElementById("cadastroNomeCompleto").value,
-                
-                    dataNascimento: document.getElementById("cadastroDataNascimento").value,
-                    
-                    sexo: document.querySelector("[name=cadastroSexo]:checked").value,
-                    
-                    cep: document.getElementById("cadastroCep").value.replace("-", ""),
-                
-                    cpf: document.getElementById("cadastroCpf").value.replace(".", "").replace(".", "").replace("-", ""),
-                    
-                    uf: document.getElementById("cadastroUf").value,
-                    
-                    cidade: document.getElementById("cadastroCidade").value,
-                    
-                    logradouro: document.getElementById("cadastroLogradouro").value,
-                
-                    numeroLogradouro: document.getElementById("cadastroNumeroLogradouro").value,
-                    
-                    email: document.getElementById("cadastroEmail").value,
-                    
-                    expectativa: document.getElementById("cadastroExpectativa").value,
-        })
+     
     })
 
         .then(response => {
@@ -104,7 +83,7 @@ function popularListaEstados() {
 
 }
 
-function criarOption(valor, texto) {
+function criaropção(valor, texto) {
     const node = document.createElement("option");
     const textnode = document.createTextNode(texto)
     node.appendChild(textnode);
@@ -113,7 +92,7 @@ function criarOption(valor, texto) {
 }
 
 //PREENCHE O CEP
-function popularEnderecoCadastro() {
+function endereçocadastro() {
     var inputCep = document.getElementById("cadastroCep")
     var cepCompleto = inputCep.value.replace("-", "");
     if (cepCompleto == null || cepCompleto == undefined || cepCompleto.length != 8) {
@@ -195,7 +174,7 @@ function parseIdImc(id) {
     return id + "Imc";
 }
 
-function criarDivImcDeCampoInvalido(idItem, textoErro, isFocarNoCampo) {
+function criarDiverrada(idItem, textoErro, isFocarNoCampo) {
     const el = document.getElementById(idItem);
     isFocarNoCampo && el.focus();
     el.classList.add("is-invalid");
