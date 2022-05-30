@@ -1,209 +1,6 @@
-const URL_API = "http://app.professordaniloalves.com.br";
+js: const URL_API = "http://app.professordaniloalves.com.br";
 
-$('.scrollSuave').click(() => {
-    $('html, body').animate(
-        { scrollTop: $(event.target.getAttribute('href')).offset().top - 100 }, 500);
-});
-
-$('#cadastroDeAcordo').change(function () {
-    $('#btnSubmitCadastro').attr("disabled", !this.checked);
-});
-
-    const formularioCadastro = document.getElementById("formCadastro");
-    formularioCadastro.addEventListener("submit", enviarFormularioCadastro, true);
-
-function enviarFormularioCadastro(event) {
-    event.preventDefault();
-
-        $("#formCadastro .invalid-feedback").remove();
-        $("#formCadastro .is-invalid").removeClass("is-invalid");
-
-    fetch(URL_API + "/api/v1/cadastro", {
-        method: "POST",
-        headers: new Headers({
-            Accept: "application/json",
-            'Content-Type': "application/json",
-        }),
-        body: JSON.stringify({
-           
-     
-    })
-
-        .then(response => {
-            return new Promise((myResolve, myReject) => {
-                response.json().then(json => {
-                    myResolve({ "status": response.status, json });
-                });
-            });
-        })
-        .then(response => {
-            if (response && response.status === 422 && response.json.errors) {
-
-
-                Object.entries(response.json.errors).forEach((obj, index) => {
-                    const id = fazNomeIdCadastro(obj[0]);
-                    const texto = obj[1][0];
-                    console.log(id);
-                    console.log(texto);
-                    erroCadastro(id, texto, index == 0);
-
-                })
-            } else if(response && response.json.message){
-                alert(response.json.message);
-                limpa();
-               } else {
-                console.log(response)
-                limpa();
-            }
-        });
-}
-
-
-
-popularListaEstados();
-
-function popularListaEstados() {
-    fetch(URL_API + "/api/v1/endereco/estados", {
-        method: "GET",
-        headers: new Headers({
-            Accept: "application/json"
-        })
-    })
-        .then(response => {
-            return response.json();
-        }).then(estados => {
-            const elSelecetUF = document.getElementById("cadastroUf");
-            estados.forEach((estado) => {
-                elSelecetUF.appendChild(criarOption(estado.uf, estado.nome));
-            })
-        }).catch(err => {
-            alert("Erro ao salvar cadastro");
-            console.log(err);
-        })
-
-}
-
-function criaropção(valor, texto) {
-    const node = document.createElement("option");
-    const textnode = document.createTextNode(texto)
-    node.appendChild(textnode);
-    node.value = valor;
-    return node;
-}
-
-//PREENCHE O CEP
-function endereçocadastro() {
-    var inputCep = document.getElementById("cadastroCep")
-    var cepCompleto = inputCep.value.replace("-", "");
-    if (cepCompleto == null || cepCompleto == undefined || cepCompleto.length != 8) {
-        console.log("CEP inválido");
-
-    } else {
-        fetch(URL_API + "/api/v1/endereco/" + cepCompleto, {
-            method: "GET",
-            headers: new Headers({
-                Accept: "application/json",
-                'Content-Type': "application/json",
-            }),
-        })
-            .then(response => {
-                return response.json();
-            }).then(jsonCep => {
-                if (jsonCep && !jsonCep.message) {
-                    var logradouro = document.getElementById("cadastroLogradouro");
-                    var estado = document.getElementById("cadastroUf");
-                    var cidade = document.getElementById("cadastroCidade");
-                    logradouro.value = jsonCep.logradouro ? jsonCep.logradouro : "";
-                    estado.value = jsonCep.uf ? jsonCep.uf : "";
-                    cidade.value = jsonCep.localidade ? jsonCep.localidade : "";
-                } else {
-                    console.log(jsonCep.message);
-
-                }
-            }).catch(err => {
-                console.log(err);
-            })
-    }
-
-}
-
-$('#btnCalcularIMC').click(() => {
-    $("#resultadoIMC").html("");
-    $("#formImc .invalid-feedback").remove();
-    $("#formImc .is-invalid").removeClass("is-invalid");
-
-    fetch(URL_API + "/api/v1/imc/calcular", {
-        method: "POST",
-        headers: new Headers({
-            Accept: "application/json",
-            'Content-Type': "application/json",
-        }),
-        body: JSON.stringify({
-            peso: document.getElementById("pesoImc").value,
-            altura: document.getElementById("alturaImc").value,
-        })
-    })
-        .then(response => {
-            return new Promise((myResolve, myReject) => {
-                response.json().then(json => {
-                    myResolve({ "status": response.status, json });
-                });
-            });
-        }).then(response => {
-            if (response && response.json.errors) {
-                Object.entries(response.json.errors).forEach((obj, index) => {
-                    const id = parseIdImc(obj[0]);
-                    const texto = obj[1][0];
-                    criarDivImcDeCampoInvalido(id, texto, index == 0);
-                })
-            } else {
-                $("#resultadoIMC").html(response.json.message);
-                $('#modalResultadoIMC').modal('show');
-            }
-        }).catch(err => {
-            $("#resultadoIMC").html("Ocorreu um erro ao tentar calcular seu IMC.");
-            $('#modalResultadoIMC').modal('show');
-            console.log(err);
-        });
-
-});
-
-//FUNÇÕES
-
-function parseIdImc(id) {
-    return id + "Imc";
-}
-
-function criarDiverrada(idItem, textoErro, isFocarNoCampo) {
-    const el = document.getElementById(idItem);
-    isFocarNoCampo && el.focus();
-    el.classList.add("is-invalid");
-    const node = document.createElement("div");
-    const textnode = document.createTextNode(textoErro);
-    node.appendChild(textnode);
-    const elDiv = el.parentElement.appendChild(node);
-    elDiv.classList.add("invalid-feedback");
-}
-function fazNomeIdCadastro(id) {
-    return "cadastro" + deixaLetraMaiuscula(id);
-}
-
-    function erroCadastro(idItem, textoErro, isFocarNoCampo) {
-        const el = document.getElementById(idItem);
-        isFocarNoCampo && el.focus();
-        el.classList.add("is-invalid");
-        const node = document.createElement("div");
-        const textnode = document.createTextNode(textoErro);
-        node.appendChild(textnode);
-        const elDiv = el.parentElement.appendChild(node);
-        elDiv.classList.add("invalid-feedback");
-    }
-
-function deixaLetraMaiuscula(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-    * MENU */
+/* MENU */
 $('.scrollSuave').click(() => {
     $('html, body').animate(
         { scrollTop: $(event.target.getAttribute('href')).offset().top - 100 }, 500);
@@ -221,11 +18,11 @@ $("#cadastroDeAcordo").change(function(){
 const formularioCadastro = document.getElementById("formCadastro");
 formularioCadastro.addEventListener("submit", enviarFormularioCadastro, true);
 
-function enviarformularioautenticado(event) {
+function enviarFormularioCadastro(event) {
     event.preventDefault();
 
-    $("#formautenticado .invalid-feedback").remove();
-    $("#formautenticado .is-invalid").removeClass("is-invalid");
+    $("#formCadastro .invalid-feedback").remove();
+    $("#formCadastro .is-invalid").removeClass("is-invalid");
 
     fetch(URL_API + "/api/v1/cadastro", {
         method: "POST",
@@ -288,9 +85,9 @@ function enviarformularioautenticado(event) {
 
 /* CRIAR LISTA DE ESTADOS */
 
-tarefadeestados();
+popularListaEstados();
 
-function tarefadeestados() {
+function popularListaEstados() {
     fetch(URL_API + "/api/v1/endereco/estados", {
         headers: new Headers({
             Accept: "application/json"
@@ -389,7 +186,7 @@ function parseIdImc(id) {
 
 /* FIM IMC */
 
-function expecionardiverrado(idItem, textoErro, isFocarNoCampo) {
+function criarDivDeCampoInvalido(idItem, textoErro, isFocarNoCampo) {
     const el = document.getElementById(idItem);
     isFocarNoCampo && el.focus();
     el.classList.add("is-invalid");
@@ -400,52 +197,50 @@ function expecionardiverrado(idItem, textoErro, isFocarNoCampo) {
     elDiv.classList.add("invalid-feedback");
 }
 
-/*preenche dados cpf
-------------------------------------------*/
 
- function analisecadastro() {
-    let campoCpf = document.getElementById("cadastroCpf")
-    let cpfPreenchido = campoCpf.value.replaceAll("-", "").replaceAll(".", "");
-    if (cpfPreenchido == null || cpfPreenchido == undefined || cpfPreenchido.length != 11) {
+ function buscaCadastro() {
+    let inputCpf = document.getElementById("cadastroCpf")
+    let inputCpfResposta = inputCpf.value.replaceAll("-", "").replaceAll(".", "");
+    if (inputCpfResposta == null || inputCpfResposta == undefined || inputCpfResposta.length != 11) {
         console.log("CPF inválido");
 
     } else {
-        fetch(URL_API + "/api/v1/cadastro/" + cpfPreenchido, {
-            method: "GET",
+             fetch(URL_API + "/api/v1/cadastro/" + inputCpfResposta, {
+                method: "GET",
             headers: new Headers({
-                Accept: "application/json",
-                'Content-Type': "application/json",
-            }),
+                        Accept: "application/json",
+                    'Content-Type': "application/json",
+                                                            }),
         })
             .then(response => {
                 return response.json();
-            }).then(nomeCpf => {
-                if (nomeCpf && !nomeCpf.message) {
-                    let parteNome = document.getElementById("cadastroNomeCompleto");
-                    let parteData = document.getElementById("cadastroDataNascimento");
-                    let parteCep = document.getElementById("cadastroCep");
-                    let parteUf = document.getElementById("cadastroUf");
-                    let parteLogradouro = document.getElementById("cadastroLogradouro");
-                    let parteNumero = document.getElementById("cadastroNumeroLogradouro");
-                    let parteEmail = document.getElementById("cadastroEmail");
-                    let parteCidade = document.getElementById("cadastroCidade");
-                    let parteExpectativa = document.getElementById("cadastroExpectativa");
+            }).then(jsonCpf => {
+                if (jsonCpf && !jsonCpf.message) {
+                    var inputName = document.getElementById("cadastroNomeCompleto");
+                        var inputData = document.getElementById("cadastroDataNascimento");
+                             var inputCep = document.getElementById("cadastroCep");
+                            var inputEstado = document.getElementById("cadastroUf");
+                            var inputLogradouro = document.getElementById("cadastroLogradouro");
+                            var inputNumber = document.getElementById("cadastroNumeroLogradouro");
+                            var inputEmail = document.getElementById("cadastroEmail");
+                    var inputCity = document.getElementById("cadastroCidade");
+                    var inputExpectativa = document.getElementById("cadastroExpectativa");
 
-                    campoNome.value = dadosCpf.nomeCompleto ? dadosCpf.nomeCompleto : "";
-                    campoData.value = dadosCpf.dataNascimento ? dadosCpf.dataNascimento : "";
-                   parteCep.value = nomeCpf.cep ?nomeCpf.cep:"";
-                   parteUf.value = nomeCpf.uf ?nomeCpf.uf:"";
-                 parteLogradouro.value = nomeCpf.logradouro ? nomeCpf.logradouro:"";
-                   parteNumero.value =nomeCpf.numeroLogradouro ? nomeCpf.numeroLogradouro:"";
-                   parteEmail.value =nomeCpf.email ? nomeCpf.email:"";
-                  parteCidade.value = nomeCpf.cidade ? nomeCpf.cidade:"";
-                  parteExpectativa.value = nomeCpf.expectativa ? nomeCpf.expectativa:"";
-                    document.querySelector("[name=cadastroSexo][value =" + nomeCpf.sexo+"]").checked=true;
+                    inputName.value = jsonCpf.nomeCompleto ? jsonCpf.nomeCompleto : "";
+                            inputData.value = jsonCpf.dataNascimento ? jsonCpf.dataNascimento : "";
+                            inputCep.value = jsonCpf.cep ? jsonCpf.cep:"";
+                                                 inputEstado.value = jsonCpf.uf ? jsonCpf.uf:"";
+                                         inputLogradouro.value = jsonCpf.logradouro ? jsonCpf.logradouro:"";
+                                            inputNumber.value = jsonCpf.numeroLogradouro ? jsonCpf.numeroLogradouro:"";
+                                                inputEmail.value = jsonCpf.email ? jsonCpf.email:"";
+                                    inputCity.value = jsonCpf.cidade ? jsonCpf.cidade:"";
+                                inputExpectativa.value = jsonCpf.expectativa ? jsonCpf.expectativa:"";
+                    document.querySelector("[name=cadastroSexo][value =" + jsonCpf.sexo+"]").checked=true;
 
-                    $('#modalCpf').modal('show')
+                    $('#alertDocumento').modal('show')
 
                 } else {
-                    console.log(nomeCpf.message);
+                    console.log(jsonCpf.message);
 
                 }
             }).catch(err => {
@@ -454,10 +249,10 @@ function expecionardiverrado(idItem, textoErro, isFocarNoCampo) {
     }
 }
 
-function apagacadastro(){
-    let campoCpf = document.getElementById("cadastroCpf")
-    let cpfPreenchido = campoCpf.value.replaceAll("-", "").replaceAll(".", "");
-    fetch(URL_API + "/api/v1/cadastro/" + cpfPreenchido, {
+function apagaCadastro(){
+    var inputCpf = document.getElementById("cadastroCpf")
+    var inputCpfResposta = inputCpf.value.replaceAll("-", "").replaceAll(".", "");
+    fetch(URL_API + "/api/v1/cadastro/" + inputCpfResposta, {
         method: "DELETE",
         headers: new Headers({
             Accept: "application/json",
