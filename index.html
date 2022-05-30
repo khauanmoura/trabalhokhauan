@@ -60,17 +60,17 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>MENOR QUE 12,5</td>
+                                <td>MENOR QUE 18,5</td>
                                 <td>MAGREZA</td>
                                 <td>0</td>
                             </tr>
                             <tr>
-                                <td>ENTRE 15,5 E 24,9</td>
+                                <td>ENTRE 18,5 E 24,9</td>
                                 <td>NORMAL</td>
                                 <td>0</td>
                             </tr>
                             <tr>
-                                <td>ENTRE 23,0 E 29,9</td>
+                                <td>ENTRE 25,0 E 29,9</td>
                                 <td>SOBREPESO</td>
                                 <td>I</td>
                             </tr>
@@ -80,7 +80,7 @@
                                 <td>II</td>
                             </tr>
                             <tr>
-                                <td>MAIOR QUE 45,0</td>
+                                <td>MAIOR QUE 40,0</td>
                                 <td>OBESIDADE GRAVE</td>
                                 <td>III</td>
                             </tr>
@@ -166,7 +166,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="cadastroCpf">CPF:</label>
                         <input type="text" class="form-control" id="cadastroCpf" placeholder="000.000.000-00"
-                            data-mask="000.000.000-00" onblur="consultaCadastro()">
+                            data-mask="000.000.000-00" onblur="buscaCadastro()">
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="cadastroCep">CEP:</label>
@@ -279,16 +279,18 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modalCpf" tabindex="-1" role="dialog"
-            aria-labelledby="modalResultadoIMCTitle" aria-hidden="true">
+        <div class="modal fade" id="alertDocumento" tabindex="-1" role="dialog" aria-labelledby="modalResultadoIMCTitle"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h5 >Esse cadastro já existe você deseja Excluir ou Alterar?</h5>
+                        <h5>Esse cadastro já existe você deseja Excluir ou Alterar?</h5>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Alterar</button>
-                        <button type="button" class="btn btn-primary" onclick="deletaCadastro()" data-dismiss = "modal">Excluir</button>
+                        <button type="button" class="btn btn-secondary" onclick="atualizaCadastro()"
+                            data-dismiss="modal">Alterar</button>
+                        <button type="button" class="btn btn-primary" onclick="apagaCadastro()"
+                            data-dismiss="modal">Excluir</button>
                     </div>
                 </div>
             </div>
@@ -314,23 +316,23 @@
 </body>
 
 <div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 </html>
