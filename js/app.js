@@ -419,33 +419,33 @@ function expecionardiverrado(idItem, textoErro, isFocarNoCampo) {
         })
             .then(response => {
                 return response.json();
-            }).then(dadosCpf => {
-                if (dadosCpf && !dadosCpf.message) {
-                    let campoNome = document.getElementById("cadastroNomeCompleto");
-                    let campoData = document.getElementById("cadastroDataNascimento");
-                    let campoCep = document.getElementById("cadastroCep");
-                    let campoUf = document.getElementById("cadastroUf");
-                    let campoLogradouro = document.getElementById("cadastroLogradouro");
-                    let campoNumero = document.getElementById("cadastroNumeroLogradouro");
-                    let campoEmail = document.getElementById("cadastroEmail");
-                    let campoCidade = document.getElementById("cadastroCidade");
-                    let campoExpectativa = document.getElementById("cadastroExpectativa");
+            }).then(nomeCpf => {
+                if (nomeCpf && !nomeCpf.message) {
+                    let parteNome = document.getElementById("cadastroNomeCompleto");
+                    let parteData = document.getElementById("cadastroDataNascimento");
+                    let parteCep = document.getElementById("cadastroCep");
+                    let parteUf = document.getElementById("cadastroUf");
+                    let parteLogradouro = document.getElementById("cadastroLogradouro");
+                    let parteNumero = document.getElementById("cadastroNumeroLogradouro");
+                    let parteEmail = document.getElementById("cadastroEmail");
+                    let parteCidade = document.getElementById("cadastroCidade");
+                    let parteExpectativa = document.getElementById("cadastroExpectativa");
 
                     campoNome.value = dadosCpf.nomeCompleto ? dadosCpf.nomeCompleto : "";
                     campoData.value = dadosCpf.dataNascimento ? dadosCpf.dataNascimento : "";
-                    campoCep.value = dadosCpf.cep ? dadosCpf.cep:"";
-                    campoUf.value = dadosCpf.uf ? dadosCpf.uf:"";
-                    campoLogradouro.value = dadosCpf.logradouro ? dadosCpf.logradouro:"";
-                    campoNumero.value = dadosCpf.numeroLogradouro ? dadosCpf.numeroLogradouro:"";
-                    campoEmail.value = dadosCpf.email ? dadosCpf.email:"";
-                    campoCidade.value = dadosCpf.cidade ? dadosCpf.cidade:"";
-                    campoExpectativa.value = dadosCpf.expectativa ? dadosCpf.expectativa:"";
-                    document.querySelector("[name=cadastroSexo][value =" + dadosCpf.sexo+"]").checked=true;
+                   parteCep.value = nomeCpf.cep ?nomeCpf.cep:"";
+                   parteUf.value = nomeCpf.uf ?nomeCpf.uf:"";
+                 parteLogradouro.value = nomeCpf.logradouro ? nomeCpf.logradouro:"";
+                   parteNumero.value =nomeCpf.numeroLogradouro ? nomeCpf.numeroLogradouro:"";
+                   parteEmail.value =nomeCpf.email ? nomeCpf.email:"";
+                  parteCidade.value = nomeCpf.cidade ? nomeCpf.cidade:"";
+                  parteExpectativa.value = nomeCpf.expectativa ? nomeCpf.expectativa:"";
+                    document.querySelector("[name=cadastroSexo][value =" + nomeCpf.sexo+"]").checked=true;
 
                     $('#modalCpf').modal('show')
 
                 } else {
-                    console.log(dadosCpf.message);
+                    console.log(nomeCpf.message);
 
                 }
             }).catch(err => {
